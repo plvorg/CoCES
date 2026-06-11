@@ -1,26 +1,37 @@
 # CoCES
 
-CoCES（Compact Counterfactual Evidence Subgraph Learning）用于知识图谱增强的大语言模型推理。
+CoCES (Compact Counterfactual Evidence Subgraph Learning) is designed for
+knowledge graph-augmented large language model reasoning.
 
-## 解决的问题
+## Problem
 
-知识图谱检索得到的候选子图通常包含大量冗余路径、错误方向路径、hub shortcut 和语义相似但指向错误答案的路径。即使模型最终回答正确，也难以判断哪些路径真正支持答案。
+Candidate subgraphs retrieved from a knowledge graph often contain redundant
+paths, incorrectly directed paths, hub shortcuts, and semantically similar
+paths leading to wrong answers. Even when the final answer is correct, it can
+be difficult to determine which paths actually support that answer.
 
-CoCES 从高召回候选路径中选择紧凑且充分的证据，并通过逐条删除路径验证其对答案的贡献，最终得到局部不可删除的证据集合。
+CoCES selects compact and sufficient evidence from a high-recall candidate path
+set. It verifies path contribution through counterfactual deletion and produces
+a locally non-deletable evidence set.
 
-## 方法流程
+## Workflow
 
-1. 从问题的主题实体出发，在知识图谱中进行有界多跳搜索。
-2. 根据关系相关性、答案类型、路径方向和 hub 惩罚构造候选路径与候选答案。
-3. 使用路径选择器为每条候选路径计算选择概率。
-4. 使用答案支持评估器计算候选答案在当前证据下的支持分数。
-5. 结合答案排序、稀疏约束、反事实删除、干扰路径抑制和弱监督训练模型。
-6. 推理时按照删除贡献从小到大尝试删除路径。
-7. 在答案、支持分数和排序间隔不变的前提下，输出压缩后的证据路径。
+1. Perform bounded multi-hop search from the topic entities.
+2. Construct candidate paths and answers using relation relevance, answer type,
+   path direction, and hub penalties.
+3. Use a path selector to estimate the selection probability of each path.
+4. Use an answer-support evaluator to score candidate answers under the current
+   evidence.
+5. Train with answer ranking, sparsity, counterfactual deletion, distractor
+   suppression, and weak supervision.
+6. During inference, attempt to remove paths in ascending order of deletion
+   contribution.
+7. Return the compressed evidence while preserving the predicted answer,
+   support threshold, and ranking margin.
 
-## 运行
+## Running the Project
 
-### 安装
+### Installation
 
 ```bash
 cd git_coces
@@ -30,9 +41,9 @@ pip install -U pip
 pip install -e .
 ```
 
-### 数据预处理
+### Data Preparation
 
-WebQSP：
+WebQSP:
 
 ```bash
 coces prepare \
@@ -47,7 +58,7 @@ coces prepare \
   --output data/processed/webqsp/train.jsonl
 ```
 
-CWQ：
+CWQ:
 
 ```bash
 coces prepare \
@@ -62,21 +73,22 @@ coces prepare \
   --output data/processed/cwq/train.jsonl
 ```
 
-开发集和测试集使用相同命令分别处理。
+Run the same commands for the development and test splits with the
+corresponding input and output paths.
 
-### 训练
+### Training
 
 ```bash
 coces train --config configs/webqsp.yaml
 ```
 
-或：
+or:
 
 ```bash
 coces train --config configs/cwq.yaml
 ```
 
-### 推理
+### Inference
 
 ```bash
 coces predict \
@@ -85,7 +97,7 @@ coces predict \
   --output outputs/webqsp/predictions.jsonl
 ```
 
-启用大语言模型生成自然语言答案：
+Enable natural-language answer generation:
 
 ```bash
 coces predict \
@@ -95,7 +107,7 @@ coces predict \
   --generate
 ```
 
-### 评测
+### Evaluation
 
 ```bash
 coces evaluate \
@@ -103,9 +115,10 @@ coces evaluate \
   --output outputs/webqsp/metrics.json
 ```
 
-评测指标包括 Hits@1、F1、平均证据规模（AES）和局部不可约率（LIR）。
+The evaluation reports Hits@1, F1, Average Evidence Size (AES), and Local
+Irreducibility Rate (LIR).
 
-### 消融实验
+### Ablation Experiments
 
 ```bash
 python scripts/make_ablations.py \
