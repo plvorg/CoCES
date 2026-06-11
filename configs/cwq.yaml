@@ -1,0 +1,53 @@
+data:
+  train_file: /mnt/data/processed/cwq/train.jsonl
+  dev_file: /mnt/data/processed/cwq/dev.jsonl
+  test_file: /mnt/data/processed/cwq/test.jsonl
+  max_paths: 100
+  max_answers: 32
+  max_path_length: 4
+
+model:
+  encoder_name: bert-base-uncased
+  max_selector_length: 224
+  max_evaluator_length: 256
+  dropout: 0.1
+  context_aware: false
+
+loss:
+  beta: 0.2
+  margin_mu: 0.5
+  lambda_sparse: 0.02
+  lambda_cf: 0.5
+  lambda_distractor: 0.5
+  lambda_weak: 0.5
+  cf_epsilon: 0.1
+  cf_top_m: 5
+  weak_positive_weight: 3.0
+  weak_negative_weight: 1.0
+
+training:
+  seed: 42
+  device: auto
+  batch_size: 2
+  gradient_accumulation_steps: 4
+  evaluator_pretrain_epochs: 2
+  selector_pretrain_epochs: 2
+  joint_epochs: 5
+  evaluator_lr: 2.0e-5
+  selector_lr: 2.0e-5
+  joint_evaluator_lr: 2.0e-6
+  output_dir: outputs/cwq
+
+inference:
+  selector_threshold: 0.45
+  support_threshold: 0.0
+  margin_threshold: 0.25
+  allow_threshold_relaxation: true
+  minimum_paths: 1
+  enable_pruning: true
+
+generation:
+  enabled: false
+  model_name: Qwen/Qwen2.5-14B-Instruct
+  max_new_tokens: 128
+  temperature: 0.0

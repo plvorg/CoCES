@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "id": "demo-1",
+      "question": "Who directed the movie adapted from the book written by Example Author?",
+      "topic_entities": ["m.author"],
+      "gold_answers": ["m.director"],
+      "gold_relations": ["m.wrote", "m.film_adaptation", "m.directed_by"]
+    }
+  ]
+}
+

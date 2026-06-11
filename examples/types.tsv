@@ -1,0 +1,5 @@
+m.director	person
+m.producer	person
+m.city	location
+m.other_director	person
+

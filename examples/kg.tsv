@@ -1,0 +1,7 @@
+m.author	m.wrote	m.book
+m.book	m.film_adaptation	m.movie
+m.movie	m.directed_by	m.director
+m.movie	m.produced_by	m.producer
+m.author	m.born_in	m.city
+m.other_movie	m.directed_by	m.other_director
+
